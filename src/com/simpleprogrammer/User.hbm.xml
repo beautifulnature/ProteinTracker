@@ -3,19 +3,75 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Apr 17, 2018 6:38:13 AM by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
-    <class name="com.simpleprogrammer.User" table="USERS">
-        <id name="id" type="int">
-            <column name="ID" />
-            <generator class="identity" />
-        </id>
-        <property name="name" type="java.lang.String">
-            <column name="NAME" />
-        </property>
-        <property name="total" type="int">
-            <column name="TOTAL" />
-        </property>
-        <property name="goal" type="int">
-            <column name="GOAL" />
-        </property>
-    </class>
+	<class name="com.simpleprogrammer.User" table="USERS">
+		<id name="id" type="int">
+			<column name="ID" />
+			<generator class="identity" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		
+		<!-- <one-to-one name="proteinData" class="com.simpleprogrammer.ProteinData" cascade="save-update"/> -->
+		<many-to-one name="proteinData" class="com.simpleprogrammer.ProteinData" column="PROTEIN_DATA_ID" cascade="save-update" unique="true"/>
+
+		<!-- <component name="proteinData">
+			<property name="total" type="int">
+				<column name="TOTAL" />
+			</property>
+			<property name="goal" type="int">
+				<column name="GOAL" />
+			</property>
+		</component> -->
+		<!-- <set name="history" table="USER_HISTORY">
+			<key column="ID" />
+			<composite-element class="com.simpleprogrammer.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</set> -->
+		<!-- <list name="history" table="USER_HISTORY">
+			<key column="ID" />
+			<list-index column="POSITION"/>
+			<composite-element class="com.simpleprogrammer.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</list> -->
+		<!-- <map name="history" table="USER_HISTORY">
+			<key column="ID" />
+			<map-key type="string" column="ENTRY_IDENTIFIER"/>
+			<composite-element class="com.simpleprogrammer.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</map> -->
+		<!-- <idbag name="history" table="USER_HISTORY">
+			<collection-id type="int" column="ID">
+				<generator class="increment" />
+			</collection-id>
+			<key column="USER_ID" />
+			<composite-element class="com.simpleprogrammer.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</idbag> -->
+		
+		<list name="history" table="USER_HISTORY" inverse="true" cascade="save-update">
+			<key column="USER_ID" />
+			<list-index column="POSITION"/>
+			<one-to-many class="com.simpleprogrammer.UserHistory"/>
+		</list>
+		<!-- <join table="USER_GOALALERT" optional="true">
+			<key column="USER_ID" />
+			<many-to-one name="goalAlert" column="GOALALERT_ID"
+							not-null="true"
+							unique="true" cascade="save-update"/>
+		</join> -->
+		<set name="goalAlerts" table="USER_GOALALERT" cascade="save-update">
+			<key column="USER_ID" />
+			<many-to-many class="com.simpleprogrammer.GoalAlert"
+					column="GOALALERT_ID"/>
+		</set>
+	</class>
 </hibernate-mapping>
