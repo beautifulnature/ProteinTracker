@@ -13,24 +13,85 @@ public class ProgramHQL{
         
         PopulateSampleData();
         Session session = HibernateUtilities.getSessionFactory().openSession();
+        session.enableFilter("nameFilter").setParameter("name", "%j");
         session.beginTransaction();
         
         //Query query = session.createQuery("from User");
         /*Query query = session.createQuery("select user from User user where user.name = :name")
                 .setString("name", "Joe");*/
-        Query query = session.createQuery("from GoalAlert")
+        /*Query query = session.createQuery("from GoalAlert")
                 .setFirstResult(2)
-                .setMaxResults(1);
+                .setMaxResults(1);*/
+        //Query query = session.getNamedQuery("AllGoalAlerts");
+        //Query query = session.createQuery("select new com.simpleprogrammer.UserTotal(user.name, user.proteinData.total) from User user");
+        /*Criteria criteria = session.createCriteria(User.class)
+        		.add(Restrictions.or(
+        				Restrictions.eq("name", "Joe"),
+        				Restrictions.eq("name", "Bob")
+        				)).setProjection(Projections.projectionList()
+        						.add(Projections.property("id"))
+        						.add(Projections.property("name")));*/
         
         //List<User> users = query.list();
-        List<GoalAlert> alerts = query.list();
+        //List<GoalAlert> alerts = query.list();
                 
         /*for (User user : users){
             System.out.println(user.getName());
         }*/
-        for (GoalAlert alert : alerts){
+        /*for (GoalAlert alert : alerts){
             System.out.println(alert.getMessage());
-        }
+        }*/
+        		
+        //List<UserTotal> userTotals = query.list();
+        //List<User> users = criteria.list();
+        /*for (UserTotal userTotal : userTotals) {
+			System.out.println(userTotal.getName() + ": " + userTotal.getTotal());
+		}*/
+        
+        
+        
+        /*for (User user : users) {
+			System.out.println(user.getName());
+		}*/
+        /*List<Object[]> results = criteria.list();
+        for (Object[] result : results) {
+			for (Object o : result) {
+				System.out.println(o.toString());
+			}
+		}
+        
+        Query query = session.createQuery("update ProteinData  pd set pd.total = 0");
+        query.executeUpdate();*/
+        /*Criteria criteria = session.createCriteria(User.class);
+        ScrollableResults users = criteria.setCacheMode(CacheMode.IGNORE).scroll();
+        int count = 0;
+        while(users.next()) {
+        	User user = (User) users.get(0);
+        	user.setProteinData(new ProteinData());
+        	session.save(user);
+        	if(++count % 2 == 0) {
+        		session.flush();
+        		session.clear();
+        	}
+        	System.out.println(user.getName());
+        }*/
+        
+        /*Query query = session.createSQLQuery("SELECT * FROM Users").addEntity(User.class);
+        List<User> users = query.list();
+        for (User user : users) {
+			System.out.println(user.getName());
+		}
+        User u = (User) session.load(User.class, 1);
+        System.out.println(u.getName());*/
+        
+        Query query = session.createQuery("from User");
+        List<User> users = query.list();
+        for (User user : users) {
+			System.out.println(user.getName());
+		}
+        
+        User u = (User) session.load(User.class, 1);
+        System.out.println(u.getName());
         
         session.getTransaction().commit();
         session.close();

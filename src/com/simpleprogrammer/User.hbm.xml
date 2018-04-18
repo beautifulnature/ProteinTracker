@@ -3,7 +3,11 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Apr 17, 2018 6:38:13 AM by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
+	<filter-def name="nameFilter" condition="name like :name">
+		<filter-param name="name" type="string"/>
+	</filter-def>
 	<class name="com.simpleprogrammer.User" table="USERS">
+		<cache usage="read-write"/>
 		<id name="id" type="int">
 			<column name="ID" />
 			<generator class="identity" />
@@ -58,6 +62,7 @@
 		</idbag> -->
 		
 		<list name="history" table="USER_HISTORY" inverse="true" cascade="save-update">
+			<cache usage="read-write"/>
 			<key column="USER_ID" />
 			<list-index column="POSITION"/>
 			<one-to-many class="com.simpleprogrammer.UserHistory"/>
@@ -73,5 +78,6 @@
 			<many-to-many class="com.simpleprogrammer.GoalAlert"
 					column="GOALALERT_ID"/>
 		</set>
+		<filter name="nameFilter" />
 	</class>
 </hibernate-mapping>
